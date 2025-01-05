@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Ionicons } from '@expo/vector-icons';
 import Main from './Main';
@@ -11,6 +12,12 @@ import Orders from './Orders'
 export default function Home(){
    
     const Tab = createBottomTabNavigator();
+    const navigation = useNavigation(); // Get navigation object
+    const handleLogout = () => {
+     
+      // Add your logout logic here, e.g., clearing auth tokens, navigating to the login screen, etc.
+      navigation.navigate("LoginScreen");
+    };
     return(
      
       <Tab.Navigator screenOptions={{
@@ -20,16 +27,16 @@ export default function Home(){
         <Tab.Screen name="Main"
          component={Main}
          options={{
-            headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
-          ),
+            headerShown: true,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={size} color={color} />
+            ),
         }}
           />
         <Tab.Screen name="Orders"
          component={Orders}
          options={{
-            headerShown: false,
+            headerShown: true,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cart" size={size} color={color} />
           ),
@@ -51,5 +58,15 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    logoutButton: {
+      position: 'absolute',
+      top: 10, // Adjust for status bar height
+      right: 10,
+      zIndex: 1,
+    },
+    logoutImage: {
+      width: 30,
+      height: 30,
     },
   });

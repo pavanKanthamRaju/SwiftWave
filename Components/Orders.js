@@ -7,12 +7,13 @@ import { Card, Title, Paragraph } from 'react-native-paper'; // Import Card
 
 export default function Orders(){
     const [data, setData] = useState([]); // State to store fetched data
-    const apiUrl = 'http://localhost:3000/users';
+    const apiUrl = 'http://192.168.1.3:3000/getUsers';
     useEffect(()=>{
         const fetchData = async () => {
             try {
                 // Replace the URL with your own or use a mock API like JSONPlaceholder
-                const response = await axios.get('http://192.168.1.2:3000/users');
+                const response = await axios.get(apiUrl);
+                console.log(  "user Data..."+response.dat); // Store the fetched data)
                 setData(response.data); // Store the fetched data
               } catch (error) {
                 console.error('Error fetching data:', error);
@@ -47,5 +48,15 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    logoutButton: {
+      position: 'absolute',
+      top: 10, // Adjust for status bar height
+      right: 10,
+      zIndex: 1,
+    },
+    logoutImage: {
+      width: 30,
+      height: 30,
     },
   });

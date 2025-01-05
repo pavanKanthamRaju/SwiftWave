@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,69 +8,72 @@ import Orders from './Components/Orders';
 import Home from './Components/Home';
 import ContactUs from './Components/ContactUs';
 import LoginScreen from './Components/Login';
+import { useNavigation } from '@react-navigation/native';
+// import CustomHeader from './Components/CustomHeader'
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 export default function App() {
-  const CustomHeader = () => (
-    <View style={styles.header}>
-      {/* This header has no title, so it's just an empty header space */}
-    </View>
-  );
+  const CustomHeader = ({ route }) => {
+    const navigation = useNavigation();
+
+    const handleLogout = () => {
+      // Assuming 'LoginScreen' is the name of your login screen in the navigator
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'LoginScreen' }],
+      });
+    };
+    if (route.name === 'LoginScreen') {
+      return null;
+    }
+    return (
+      <View style={styles.header}>
+         <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+                <Image
+          source={require('./assets/turn-off.png')} // Replace with your logout image path
+          style={styles.logoutImage}
+        />
+              </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
-    // <NavigationContainer>
-    //   <Tab.Navigator screenOptions={{
-    //       tabBarActiveTintColor: 'tomato',
-    //       tabBarInactiveTintColor: 'gray',
-    //     }}>
-    //     <Tab.Screen name="Main"
-    //      component={Main}
-    //      options={{
-    //       tabBarLabel: 'Main',
-    //       tabBarIcon: ({ color, size }) => (
-    //         <Ionicons name="home" size={size} color={color} />
-    //       ),
-    //     }}
-    //       />
-    //     <Tab.Screen name="Orders"
-    //      component={Orders}
-    //      options={{
-    //       tabBarLabel: 'Orders',
-    //       tabBarIcon: ({ color, size }) => (
-    //         <Ionicons name="cart" size={size} color={color} />
-    //       ),
-    //     }}
-    //       />
-    //   </Tab.Navigator>
-    // </NavigationContainer>
     <NavigationContainer>
-    <Drawer.Navigator
-       screenOptions={{
-        headerShown: true, // Make sure the header is shown
-        headerTitle: null, // Hide the title in the header
-      }}
-    >
-       <Drawer.Screen name="Login" component={LoginScreen}
-      options={{
-        headerTitle: null,  // Hide title for this screen
-        headerShown: true,  // Keep the header visible (with hamburger icon)
-      }}
-       />
-      <Drawer.Screen name="Home" component={Home}
-      options={{
-        headerTitle: null,  // Hide title for this screen
-        headerShown: true,  // Keep the header visible (with hamburger icon)
-      }}
-       />
-      <Drawer.Screen name="Contact Us" component={ContactUs}
-      options={{
-        headerTitle: null,  // Hide title for this screen
-        headerShown: true,  // Keep the header visible (with hamburger icon)
-      }}
-       />
-    </Drawer.Navigator>
-     </NavigationContainer>
-   
-  );
+      <Drawer.Navigator
+        initialRouteName="Home"
+        screenOptions={({ route }) => ({
+          headerShown: true, // Show header for all screens
+          header: () => <CustomHeader route={route} /> // Conditionally render custom header
+        })}
+      >
+        <Drawer.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          screenOptions={({ route }) => ({
+            headerShown: true, // Show header for all screens
+            header: () => <CustomHeader route={route} /> // Conditionally render custom header
+          })}
+        />
+        <Drawer.Screen
+          name="Home"
+          component={Home}
+          screenOptions={({ route }) => ({
+            headerShown: true, // Show header for all screens
+            header: () => <CustomHeader route={route} /> // Conditionally render custom header
+          })}
+        />
+        <Drawer.Screen
+          name="Contact Us"
+          component={ContactUs}
+          screenOptions={({ route }) => ({
+            headerShown: true, // Show header for all screens
+            header: () => <CustomHeader route={route} /> // Conditionally render custom header
+          })}
+        />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );r
 }
 
 const styles = StyleSheet.create({
@@ -91,5 +94,15 @@ fontSize:20
     backgroundColor: '#f1f1f1', 
     justifyContent: 'center', 
     alignItems: 'center',
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 25, // Adjust for status bar height
+    right: 10,
+    zIndex: 1,
+  },
+  logoutImage: {
+    width: 30,
+    height: 30,
   },
 });

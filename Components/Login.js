@@ -17,7 +17,7 @@ const LoginScreen = () => {
       Alert.alert('Error', 'Please enter both email and password.');
     } else {
         try {
-            const response = await axios.post('http://192.168.1.2:3000/login', {
+            const response = await axios.post('http://192.168.1.3:3000/login', {
               email,
               password,
             });
